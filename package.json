@@ -10,8 +10,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "clean": "rm -rf mochawesome-report coverage logs",
-    "test:pw": "npx playwright test",
-    "test:pw:headed": "npx playwright test --headed"
+    "test:pw": "npx playwright test tests/playwright",
+    "test:pw:headed": "npx playwright test tests/playwright --headed"
   },
   "dependencies": {
     "cross-env": "^7.0.3",

@@ -5,7 +5,12 @@ module.exports = {
     headless: true,
     viewport: { width: 1280, height: 720 },
     actionTimeout: 10000,
-    ignoreHTTPSErrors: true
+    ignoreHTTPSErrors: true,
+    // Capture screenshots on failure and keep traces/videos on failure
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure'
   },
   timeout: 30000,
+  reporter: [['list'], ['html', { outputFolder: 'playwright-report', open: 'never' }]]
 };
