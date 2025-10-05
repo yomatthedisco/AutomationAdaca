@@ -22,6 +22,11 @@ Thumbs.db
 .vscode/
 .idea/
 
+# # Ignore Mochawesome reports
+# mochawesome-report/
+# mochawesome-report/*.html
+# mochawesome-report/*.json
+
 # Test output
 artifacts/
 screenshots/
