@@ -17,6 +17,17 @@ class InventoryPage {
     return true;
   }
 
+  /**
+   * Wait for the main inventory container to be present. Use this as the canonical
+   * signal that the page has loaded its product list.
+   */
+  async waitForInventoryContainer() {
+    const inventoryContainer = By.id("inventory_container");
+    await this.driver.wait(until.elementLocated(inventoryContainer), config.defaultTimeout);
+    // small stabilization wait
+    await this.driver.sleep(200);
+  }
+
   _addButtonXpathFor(name) {
     return `//div[text()="${name}"]//ancestor::div[@class='inventory_item_label']/following-sibling::div/button[text()='Add to cart']`;
   }
@@ -27,29 +38,43 @@ class InventoryPage {
 
   async addToCartByName(name) {
     console.log(`[STEP] Adding item to cart: ${name}`);
-    const xpath = this._addButtonXpathFor(name);
-    const btn = await this.driver.wait(until.elementLocated(By.xpath(xpath)), config.defaultTimeout);
+    // Ensure inventory container is present before searching for the item
+    await this.waitForInventoryContainer();
+
+    const itemRootXpath = `//div[text()="${name}"]//ancestor::div[contains(@class,'inventory_item')]`;
+    const addBtnXpath = `${itemRootXpath}//button[text()='Add to cart']`;
+
+    const btn = await this.driver.wait(until.elementLocated(By.xpath(addBtnXpath)), config.defaultTimeout);
     await this.driver.wait(until.elementIsVisible(btn), config.defaultTimeout);
-    // Read the displayed item name from the page to confirm exact text
+
+    // Capture the displayed item name for verification
+    let displayed = name;
     try {
-      const nameEl = await this.driver.findElement(By.xpath(`//div[text()="${name}"]`));
-      const displayed = await nameEl.getText();
+      const nameEl = await this.driver.findElement(By.xpath(`${itemRootXpath}//div[@class='inventory_item_name']`));
+      displayed = await nameEl.getText();
       console.log(`[INFO] Found item on page: ${displayed}`);
     } catch (err) {
       console.warn(`[WARN] Could not read displayed item name for ${name}:`, err && err.message ? err.message : err);
     }
+
     await btn.click();
-    console.log(`[INFO] Clicked 'Add to cart' for ${name}`);
-    // return the expected name so caller can verify it in the cart
-    return name;
+    // Wait until Remove button appears to ensure the click succeeded
+    const removeBtnXpath = `${itemRootXpath}//button[text()='Remove']`;
+    await this.driver.wait(until.elementLocated(By.xpath(removeBtnXpath)), config.defaultTimeout);
+    console.log(`[INFO] Clicked 'Add to cart' for ${displayed}`);
+    return displayed;
   }
 
   async removeFromCartByName(name) {
     console.log(`[STEP] Removing item from cart (product page): ${name}`);
-    const xpath = this._removeButtonXpathFor(name);
-    const btn = await this.driver.wait(until.elementLocated(By.xpath(xpath)), config.defaultTimeout);
+    const itemRootXpath = `//div[text()="${name}"]//ancestor::div[contains(@class,'inventory_item')]`;
+    const removeBtnXpath = `${itemRootXpath}//button[text()='Remove']`;
+    const btn = await this.driver.wait(until.elementLocated(By.xpath(removeBtnXpath)), config.defaultTimeout);
     await this.driver.wait(until.elementIsVisible(btn), config.defaultTimeout);
     await btn.click();
+    // Wait until Add to cart button reappears as confirmation
+    const addBtnXpath = `${itemRootXpath}//button[text()='Add to cart']`;
+    await this.driver.wait(until.elementLocated(By.xpath(addBtnXpath)), config.defaultTimeout);
     console.log(`[INFO] Clicked 'Remove' for ${name}`);
   }
 
@@ -69,7 +94,9 @@ class InventoryPage {
 
   async clickCart() {
     console.log("[STEP] Clicking cart icon...");
-    const cart = await this.driver.wait(until.elementLocated(By.css("span.shopping_cart_link")), config.defaultTimeout);
+    const cart = await this.driver.wait(until.elementLocated(By.css("a.shopping_cart_link")), config.defaultTimeout);
+    await this.driver.wait(until.elementIsVisible(cart), config.defaultTimeout);
+    await this.driver.wait(until.elementIsEnabled(cart), config.defaultTimeout);
     await cart.click();
     console.log("[INFO] Clicked cart icon.");
   }
