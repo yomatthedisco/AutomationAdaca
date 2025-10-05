@@ -21,6 +21,24 @@ describe("Inventory Page Tests", function () {
     if (driver) await driver.quit();
   });
 
+  // Capture screenshot for every test (passed or failed) and attach to mochawesome
+  afterEach(async function () {
+    if (this.currentTest && driver) {
+      try {
+        const { saveScreenshot } = require("../utils/driver");
+        const addContext = require("mochawesome/addContext");
+        const state = this.currentTest.state || "unknown";
+        const safeName = `${this.currentTest.title}__${state}`.replace(/[^a-z0-9\-]/gi, "_").toLowerCase();
+        const destUnderReport = `mochawesome-report/screenshots/${safeName}.png`;
+        await saveScreenshot(driver, destUnderReport);
+        const reportRelativePath = `screenshots/${safeName}.png`;
+        addContext(this, reportRelativePath);
+      } catch (err) {
+        console.warn("[WARN] Could not capture screenshot:", err && err.message ? err.message : err);
+      }
+    }
+  });
+
   it("Add to cart single item scenario", async function () {
     const itemName = "Sauce Labs Backpack";
     await loginPage.open();

@@ -33,20 +33,18 @@ describe("Login Page Tests", function () {
     }
   });
 
-  // Capture screenshot on failure for easier debugging
+  // Capture screenshot for every test (passed or failed) and attach to mochawesome
   afterEach(async function () {
-    if (this.currentTest && this.currentTest.state === "failed" && driver) {
+    if (this.currentTest && driver) {
       try {
         const { saveScreenshot } = require("../utils/driver");
         const addContext = require("mochawesome/addContext");
-        const safeName = this.currentTest.title.replace(/[^a-z0-9\-]/gi, "_").toLowerCase();
-  // Save screenshot under mochawesome-report/screenshots so it's next to the report
-  const destUnderReport = `mochawesome-report/screenshots/${safeName}.png`;
-  const saved = await saveScreenshot(driver, destUnderReport);
-  // The mochawesome HTML file lives in mochawesome-report/, so the path it should load is relative
-  // to that file: `screenshots/<name>.png` (forward slashes). Do not prefix with 'mochawesome-report/'.
-  const reportRelativePath = `screenshots/${safeName}.png`;
-  addContext(this, reportRelativePath);
+        const state = this.currentTest.state || "unknown";
+        const safeName = `${this.currentTest.title}__${state}`.replace(/[^a-z0-9\-]/gi, "_").toLowerCase();
+        const destUnderReport = `mochawesome-report/screenshots/${safeName}.png`;
+        await saveScreenshot(driver, destUnderReport);
+        const reportRelativePath = `screenshots/${safeName}.png`;
+        addContext(this, reportRelativePath);
       } catch (err) {
         console.warn("[WARN] Could not capture screenshot:", err && err.message ? err.message : err);
       }
