@@ -43,11 +43,11 @@
       "semi": ["error", "always"]
     }
   },
-  "author": "Your Name",
+  "author": "Yom Eustaquio",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/selenium-automation-framework.git"
+    "url": "https://github.com/yomatthedisco/AutomationAdaca.git"
   },
   "keywords": [
     "selenium",

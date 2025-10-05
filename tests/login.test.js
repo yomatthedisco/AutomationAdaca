@@ -1,44 +1,34 @@
 const { expect } = require("chai");
 const { createDriver } = require("../utils/driver");
-const LoginPage = require("../../pages/login.page");
-const testData = require("../../test_data/loginData.json");
+const LoginPage = require("../pages/login.page");
+const testData = require("../test-data/user_credentials.json");
 
-describe("Login Tests (POM)", function () {
-  this.timeout(60000);
-  let driver;
-  let loginPage;
+describe("Login Page Tests", function () {
+  this.timeout(30000);
+  let driver, loginPage;
 
-  beforeEach(async () => {
+  before(async () => {
     driver = await createDriver();
     loginPage = new LoginPage(driver);
   });
 
-  afterEach(async () => {
-    if (driver) await driver.quit();
+  after(async () => {
+    console.log("[INFO] Closing browser...");
+    await driver.quit();
   });
 
-  it("Should fail with invalid credentials", async () => {
-    const { username, password } = testData.invalidUser;
+  it("should login successfully with valid credentials", async () => {
     await loginPage.open();
-    await loginPage.login(username, password);
-    const error = await loginPage.getErrorMessage();
-    expect(error).to.include("Invalid username or password");
-  });
-
-  it("Should login successfully with valid credentials", async () => {
-    const { username, password } = testData.validUser;
-    await loginPage.open();
-    await loginPage.login(username, password);
-    await loginPage.waitForTitleContains("Dashboard", 15000);
+    await loginPage.login(testData.validUser.username, testData.validUser.password);
+    await loginPage.waitForPageTitleContains("Swag Labs");
     const title = await driver.getTitle();
-    expect(title).to.include("Dashboard");
+    expect(title).to.include("Swag Labs");
   });
 
-  // Example of iterating multiple users:
-  testData.users.forEach((u) => {
-    it(`Iterates user ${u.username} (example)`, async () => {
-      await loginPage.open();
-      await loginPage.login(u.username, u.password);
-    });
+  it("should display error message for invalid credentials", async () => {
+    await loginPage.open();
+    await loginPage.login(testData.invalidUser.username, testData.invalidUser.password);
+    const error = await loginPage.getErrorMessage();
+    expect(error).to.contain("Epic sadface");
   });
 });
