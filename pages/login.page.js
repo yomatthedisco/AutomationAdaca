@@ -10,6 +10,7 @@
  */
 const { By, until } = require("selenium-webdriver");
 const config = require("../config");
+const logger = require('../utils/logger');
 
 class LoginPage {
   constructor(driver) {
@@ -24,26 +25,26 @@ class LoginPage {
   }
 
   async open() {
-    console.log("[STEP] Opening login page...");
+    logger.info('Opening login page...');
     await this.driver.get(this.url);
   }
 
   async enterUsername(username) {
-    console.log(`[STEP] Entering username: ${username}`);
+    logger.debug(`Entering username: ${username}`);
     const el = await this.driver.wait(until.elementLocated(this.locators.usernameInput), config.defaultTimeout);
     await el.clear();
     await el.sendKeys(username);
   }
 
   async enterPassword(password) {
-    console.log("[STEP] Entering password...");
+    logger.debug('Entering password...');
     const el = await this.driver.wait(until.elementLocated(this.locators.passwordInput), config.defaultTimeout);
     await el.clear();
     await el.sendKeys(password);
   }
 
   async clickLogin() {
-    console.log("[STEP] Clicking login button...");
+    logger.debug('Clicking login button...');
     const btn = await this.driver.wait(until.elementLocated(this.locators.loginButton), config.defaultTimeout);
     await this.driver.wait(until.elementIsEnabled(btn), config.defaultTimeout);
     await btn.click();
@@ -58,20 +59,20 @@ class LoginPage {
       await this.acceptAlertIfPresent();
     } catch (err) {
       // Log and continue; tests should still proceed even if alert handling fails
-      console.warn("[WARN] Error while handling alert:", err && err.message ? err.message : err);
+      logger.warn('Error while handling alert:', err && err.message ? err.message : err);
     }
     // Try to dismiss browser/OS-level password manager prompts (best-effort)
     try {
       await this.acceptPasswordManagerIfPresent();
     } catch (e) {
       // not fatal — log and continue
-      console.info("[INFO] Password manager dismissal check finished:", e && e.message ? e.message : e);
+      logger.info('Password manager dismissal check finished:', e && e.message ? e.message : e);
     }
     // Additional targeted handler for Google Password Manager "Change your password" warning
     try {
       await this.dismissGooglePasswordManagerWarning();
     } catch (e) {
-      console.info("[INFO] Google password warning dismissal finished:", e && e.message ? e.message : e);
+      logger.info('Google password warning dismissal finished:', e && e.message ? e.message : e);
     }
   }
 
@@ -85,7 +86,7 @@ class LoginPage {
       const alert = await this.driver.switchTo().alert();
       try {
         const text = await alert.getText();
-        console.log(`[STEP] Alert present with text: ${text}. Accepting alert...`);
+          logger.info(`Alert present with text: ${text}. Accepting alert...`);
       } catch (e) {
         // ignore getting text failure
       }
@@ -98,7 +99,7 @@ class LoginPage {
       // Do not treat as fatal — return false so caller can continue
       // Normalize timeout message handling
       const msg = err && err.name === "TimeoutError" ? "no alert present" : (err && err.message ? err.message : String(err));
-      console.log(`[INFO] acceptAlertIfPresent: ${msg}`);
+        logger.info(`acceptAlertIfPresent: ${msg}`);
       return false;
     }
   }
@@ -128,7 +129,7 @@ class LoginPage {
         if (el) {
           try {
             await el.click();
-            console.log(`[INFO] Clicked password-manager candidate: ${selector}`);
+              logger.info(`Clicked password-manager candidate: ${selector}`);
             // small pause for UI to settle
             await new Promise((r) => setTimeout(r, 300));
             return true;
@@ -161,7 +162,7 @@ class LoginPage {
       try {
         const el = await this.driver.findElement(By.xpath(xp));
         if (el) {
-          console.log(`[INFO] Found possible Google password warning using xpath: ${xp}`);
+            logger.info(`Found possible Google password warning using xpath: ${xp}`);
           // try to find a button inside or near this element
           for (const btnText of buttonTexts) {
             try {
@@ -169,7 +170,7 @@ class LoginPage {
               const btn = await el.findElement(By.xpath(`.//button[contains(normalize-space(.), '${btnText}')]`));
               if (btn) {
                 await btn.click();
-                console.log(`[INFO] Clicked '${btnText}' button to dismiss password warning`);
+                  logger.info(`Clicked '${btnText}' button to dismiss password warning`);
                 await new Promise((r) => setTimeout(r, 300));
                 return true;
               }
@@ -184,7 +185,7 @@ class LoginPage {
               const globalBtn = await this.driver.findElement(By.xpath(`//button[contains(normalize-space(.), '${btnText}')]`));
               if (globalBtn) {
                 await globalBtn.click();
-                console.log(`[INFO] Clicked global '${btnText}' button to dismiss password warning`);
+                  logger.info(`Clicked global '${btnText}' button to dismiss password warning`);
                 await new Promise((r) => setTimeout(r, 300));
                 return true;
               }
@@ -219,7 +220,7 @@ class LoginPage {
             const btn = await found.findElement(By.xpath(`.//button[contains(normalize-space(.), '${btnText}')]`));
             if (btn) {
               await btn.click();
-              console.log(`[INFO] Clicked '${btnText}' to dismiss (delayed)`);
+                logger.info(`Clicked '${btnText}' to dismiss (delayed)`);
               return true;
             }
           } catch (e) {

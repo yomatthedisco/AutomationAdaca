@@ -2,6 +2,7 @@
  * Lightweight test reporter used by tests to collect pass/fail counts and print a summary.
  */
 const counts = { total: 0, passed: 0, failed: 0 };
+const logger = require('./logger');
 
 function recordTest(test) {
   if (!test) return;
@@ -11,11 +12,11 @@ function recordTest(test) {
 }
 
 function printSummary() {
-  console.log("\n=== Test summary ===");
-  console.log(`Total: ${counts.total}`);
-  console.log(`Passed: ${counts.passed}`);
-  console.log(`Failed: ${counts.failed}`);
-  console.log("====================\n");
+  logger.info('\n=== Test summary ===');
+  logger.info(`Total: ${counts.total}`);
+  logger.info(`Passed: ${counts.passed}`);
+  logger.info(`Failed: ${counts.failed}`);
+  logger.info('====================\n');
 }
 
 module.exports = { recordTest, printSummary };

@@ -45,8 +45,14 @@ This project demonstrates a **modular automation testing framework** designed fo
 ## How to run the tests
 
 Prerequisites:
-- Node.js 16+ and npm installed
+- Node.js 16.x or 18.x and npm (tested with Node 16/18 and npm 8+)
 - Chrome installed (chromedriver version in package.json should match your Chrome)
+
+After installing dependencies you must install Playwright browsers (if you plan to run Playwright tests):
+
+```cmd
+npx playwright install
+```
 
 Install dependencies:
 
@@ -69,8 +75,30 @@ cmd /c "cd /d C:\path\to\repository && npm run test:headless"
 
 Troubleshooting:
 - If PowerShell refuses to run npm scripts, run tests through cmd.exe (examples above) or run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` in PowerShell for the session.
-- If you see SessionNotCreatedError, update the `chromedriver` devDependency to match your Chrome version or update Chrome.
+- If you see SessionNotCreatedError, update the `chromedriver` devDependency to match your Chrome version or update Chrome. Example (replace <major> with your Chrome major version):
+
+```cmd
+npm i --save-dev chromedriver@<major>
+```
+
 - Screenshots of failed tests are saved to `mochawesome-report/screenshots/`.
+
+Artifacts & reports (quick access):
+
+- Mocha / mochawesome HTML report: `mochawesome-report/mochawesome.html`
+	- Open on Windows: `start mochawesome-report\\mochawesome.html`
+- Playwright HTML report: generated under `playwright-report/`
+	- Show Playwright report: `npx playwright show-report playwright-report`
+
+Note about credentials and secrets:
+
+- `test-data/user_credentials.json` contains demo credentials used by the public saucedemo site. For real projects do NOT store secrets in the repo. Prefer environment variables or a secrets manager. Example (Windows cmd):
+
+```cmd
+set TEST_USER=standard_user
+set TEST_PASS=secret_sauce
+npm test
+```
 
 Evaluation criteria mapping (how this repo addresses each item):
 
@@ -116,3 +144,43 @@ npm install
 npx playwright install
 npm run test:pw
 ```
+
+---
+
+## Summary of files changed/created for this assessment
+
+- `pages/` - Playwright and Selenium Page Objects (login, inventory)
+- `tests/` - Mocha (Selenium) tests and `tests/playwright/` Playwright tests
+- `utils/` - `driver.js`, `stringUtil.js`, `testReporter.js` helpers
+- `mochawesome-report/` and `playwright-report/` - generated reports and screenshots/traces
+
+---
+
+## Framework features
+
+- Page Object Model (POM) implemented for both Selenium and Playwright — keeps locators and interactions encapsulated.
+- Centralized WebDriver creation (`utils/driver.js`) with Chrome ServiceBuilder, explicit binary use and configurable headless/visible mode.
+- Playwright demo suite under `tests/playwright/` using `@playwright/test` and POM-style pages.
+- Robust synchronization: explicit waits, retry/backoff for flaky UI elements (error messages), and load-state checks.
+- Screenshot capture on every test (passed/failed) and attachment into mochawesome and Playwright reports.
+- Lightweight test reporter (`utils/testReporter.js`) to print a concise summary after Mocha runs.
+- Small shared utilities: `utils/stringUtil.js` for traceable strings and `utils/logger.js` for centralized, level-controlled logging.
+
+## Advantages / Pros
+
+- Maintainability: POM structure and organized folder layout (pages, tests, utils) make it easy to extend.
+- Reliability: explicit waits, timeouts, and targeted handlers for common flakiness (password manager prompts, alerts).
+- Observability: screenshots, consistent logging (LOG_LEVEL), and HTML reports (mochawesome + Playwright) make debugging and review straightforward.
+- Dual-tooling: Selenium for the main assessment and Playwright as a modern, fast demonstration — useful for comparison and future migration.
+- Minimal friction for reviewers: Windows-friendly run commands, Playwright report viewer, and report screenshots included.
+
+## Future enhancements (nice-to-have / roadmap)
+
+- CI integration: add a GitHub Actions workflow to run Selenium (headless) and Playwright tests on push/PR and publish artifacts.
+- Secrets management: move credentials to env vars or a secrets manager; add `.env.example` and `dotenv` support.
+- Cross-browser coverage: add Firefox and Edge capabilities and parameterized runs across browsers.
+- Test data expansion: add data-driven suites (CSV/JSON matrix) and boundary/negative tests for inventory flows.
+- Parallelization and stability: tune driver creation for isolated parallel runs, or run Selenium tests in a grid (Selenium Grid or Selenoid).
+- Accessibility & performance checks: integrate lightweight a11y scans (axe-core) and simple performance checks (Lighthouse / Puppeteer scripts).
+- Better artifact retention: upload Playwright traces/videos and mochawesome JSON to an artifacts store in CI for long-term review.
+

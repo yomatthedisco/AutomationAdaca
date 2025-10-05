@@ -1,9 +1,15 @@
+const logger = require('../../utils/logger');
+
 class PlaywrightInventoryPage {
   /**
    * @param {import('@playwright/test').Page} page
    */
   constructor(page) {
     this.page = page;
+    this.selectors = {
+      headerTitle: "xpath=//div[@class='header_secondary_container']/span",
+      cartHeaderText: "Your Cart"
+    };
   }
 
   itemRootSelector(name) {
@@ -29,7 +35,7 @@ class PlaywrightInventoryPage {
 
   async addToCartByName(name) {
     const addSel = this.addButtonSelector(name);
-    console.log(`[PW] Waiting for add button for ${name}`);
+  logger.debug(`[PW] Waiting for add button for ${name}`);
     await this.page.waitForSelector(addSel, { state: 'visible', timeout: 10000 });
     await this.page.click(addSel);
     // wait for remove button
@@ -64,6 +70,24 @@ class PlaywrightInventoryPage {
   async isItemInCart(name) {
     try {
       await this.page.waitForSelector(`xpath=//div[@class='cart_item']//div[text()="${name}"]`, { timeout: 5000 });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async isRemoveVisible(name) {
+    try {
+      await this.page.waitForSelector(this.removeButtonSelector(name), { state: 'visible', timeout: 5000 });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async isAddVisible(name) {
+    try {
+      await this.page.waitForSelector(this.addButtonSelector(name), { state: 'visible', timeout: 5000 });
       return true;
     } catch (e) {
       return false;
