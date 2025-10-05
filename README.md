@@ -21,12 +21,14 @@ Develop a basic automation test suite for a simple web application using **Selen
 This project demonstrates a **modular automation testing framework** designed for maintainability, scalability, and readability.  
 
 ### Tools Used  
-- Selenium WebDriver  
-- Mocha  
-- Chai  
-- NYC  
-- ESLint  
-- Page Object Model (POM)  
+- Selenium WebDriver – Automates browsers for functional testing.
+- Mocha – Test runner for executing test cases. 
+- Mochawesome – Generates beautiful HTML reports. 
+- Chai – Assertion library used with Mocha. 
+- NYC - Provides test coverage reports.  
+- ESLint – Ensures consistent code style and quality.
+- Playwright – Demo suite for modern cross-browser automation.  
+- Page Object Model (POM) – Design pattern that separates test logic from page locators and actions.  
 
 ---
 
@@ -47,6 +49,7 @@ This project demonstrates a **modular automation testing framework** designed fo
 Prerequisites:
 - Node.js 16.x or 18.x and npm (tested with Node 16/18 and npm 8+)
 - Chrome installed (chromedriver version in package.json should match your Chrome)
+- Git (https://git-scm.com/)
 
 After installing dependencies you must install Playwright browsers (if you plan to run Playwright tests):
 
