@@ -1,15 +1,15 @@
 {
   "stats": {
-    "suites": 1,
-    "tests": 2,
+    "suites": 2,
+    "tests": 4,
     "passes": 2,
     "pending": 0,
-    "failures": 0,
-    "start": "2025-10-05T18:06:17.701Z",
-    "end": "2025-10-05T18:06:45.955Z",
-    "duration": 28254,
-    "testsRegistered": 2,
-    "passPercent": 100,
+    "failures": 2,
+    "start": "2025-10-05T18:22:40.418Z",
+    "end": "2025-10-05T18:23:57.233Z",
+    "duration": 76815,
+    "testsRegistered": 4,
+    "passPercent": 50,
     "pendingPercent": 0,
     "other": 0,
     "hasOther": false,
@@ -18,16 +18,120 @@
   },
   "results": [
     {
-      "uuid": "dca4552b-bd54-4711-95a2-a0687a119145",
+      "uuid": "89e69e1e-a598-4d1e-b462-2adf4a536b7c",
       "title": "",
-      "fullFile": "C:\\Users\\Memes\\Documents\\AutomationAdaca\\tests\\login.test.js",
-      "file": "\\tests\\login.test.js",
+      "fullFile": "",
+      "file": "",
       "beforeHooks": [],
       "afterHooks": [],
       "tests": [],
       "suites": [
         {
-          "uuid": "494c5698-cb94-4e5f-a93a-344de123bd21",
+          "uuid": "1a71fbc9-eb74-4886-9029-17af3d786e6f",
+          "title": "Inventory Page Tests",
+          "fullFile": "C:\\Users\\Memes\\Documents\\AutomationAdaca\\tests\\inventory.test.js",
+          "file": "\\tests\\inventory.test.js",
+          "beforeHooks": [
+            {
+              "title": "\"before all\" hook in \"Inventory Page Tests\"",
+              "fullTitle": "Inventory Page Tests \"before all\" hook in \"Inventory Page Tests\"",
+              "timedOut": false,
+              "duration": 622,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "driver = await createDriver();\nloginPage = new LoginPage(driver);\ninventoryPage = new InventoryPage(driver);",
+              "err": {},
+              "uuid": "cf17827b-be2d-4c09-a7ec-a7cd1bf84e91",
+              "parentUUID": "1a71fbc9-eb74-4886-9029-17af3d786e6f",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after all\" hook in \"Inventory Page Tests\"",
+              "fullTitle": "Inventory Page Tests \"after all\" hook in \"Inventory Page Tests\"",
+              "timedOut": false,
+              "duration": 39,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "if (driver) await driver.quit();",
+              "err": {},
+              "uuid": "5b7d2544-4784-450d-b643-8971971afb67",
+              "parentUUID": "1a71fbc9-eb74-4886-9029-17af3d786e6f",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [
+            {
+              "title": "Add to cart single item scenario",
+              "fullTitle": "Inventory Page Tests Add to cart single item scenario",
+              "timedOut": false,
+              "duration": 24250,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const itemName = \"Sauce Labs Backpack\";\nawait loginPage.open();\nawait loginPage.login(testData.validUser.username, testData.validUser.password);\nconsole.log(\"Verifying landed on Swag Labs page...\");\nexpect(await inventoryPage.isAtInventoryPage()).to.be.true;\nconsole.log(`Adding item to cart: ${itemName}`);\nawait inventoryPage.addToCartByName(itemName);\nconsole.log(\"Verifying Remove button visible...\");\nconst removeVisible = await inventoryPage.isRemoveButtonVisible(itemName);\nexpect(removeVisible).to.be.true;\nconsole.log(\"Clicking cart button...\");\nawait inventoryPage.clickCart();\nconsole.log(\"Verifying at Cart page...\");\nexpect(await inventoryPage.isAtCartPage()).to.be.true;\nconsole.log(\"Verifying item present in cart...\");\nexpect(await inventoryPage.isItemInCart(itemName)).to.be.true;",
+              "err": {
+                "message": "TimeoutError: Waiting for element to be located By(css selector, span.shopping_cart_link)\nWait timed out after 10146ms",
+                "estack": "TimeoutError: Waiting for element to be located By(css selector, span.shopping_cart_link)\nWait timed out after 10146ms\n    at C:\\Users\\Memes\\Documents\\AutomationAdaca\\node_modules\\selenium-webdriver\\lib\\webdriver.js:929:22\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+                "diff": null
+              },
+              "uuid": "7164013e-22ad-4d42-af49-bdf8dfc3535e",
+              "parentUUID": "1a71fbc9-eb74-4886-9029-17af3d786e6f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Delete an item in Product Page",
+              "fullTitle": "Inventory Page Tests Delete an item in Product Page",
+              "timedOut": false,
+              "duration": 23706,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const itemName = \"Sauce Labs Backpack\";\nawait loginPage.open();\nawait loginPage.login(testData.validUser.username, testData.validUser.password);\nexpect(await inventoryPage.isAtInventoryPage()).to.be.true;\nawait inventoryPage.addToCartByName(itemName);\nexpect(await inventoryPage.isRemoveButtonVisible(itemName)).to.be.true;\nconsole.log(\"Removing the item from product page...\");\nawait inventoryPage.removeFromCartByName(itemName);\n// After remove, the remove button should no longer be present; the add button should be present instead\nconst stillRemoveVisible = await inventoryPage.isRemoveButtonVisible(itemName);\nexpect(stillRemoveVisible).to.be.false;",
+              "err": {
+                "message": "TimeoutError: Waiting for element to be located By(xpath, //div[text()=\"Sauce Labs Backpack\"]//ancestor::div[@class='inventory_item_label']/following-sibling::div/button[text()='Add to cart'])\nWait timed out after 10184ms",
+                "estack": "TimeoutError: Waiting for element to be located By(xpath, //div[text()=\"Sauce Labs Backpack\"]//ancestor::div[@class='inventory_item_label']/following-sibling::div/button[text()='Add to cart'])\nWait timed out after 10184ms\n    at C:\\Users\\Memes\\Documents\\AutomationAdaca\\node_modules\\selenium-webdriver\\lib\\webdriver.js:929:22\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+                "diff": null
+              },
+              "uuid": "71dd1f78-1035-4bf4-978d-58a21f5f12f0",
+              "parentUUID": "1a71fbc9-eb74-4886-9029-17af3d786e6f",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "7164013e-22ad-4d42-af49-bdf8dfc3535e",
+            "71dd1f78-1035-4bf4-978d-58a21f5f12f0"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 47956,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 60000
+        },
+        {
+          "uuid": "742a7a91-4723-4cee-8f68-77d90215c2de",
           "title": "Login Page Tests",
           "fullFile": "C:\\Users\\Memes\\Documents\\AutomationAdaca\\tests\\login.test.js",
           "file": "\\tests\\login.test.js",
@@ -36,7 +140,7 @@
               "title": "\"before all\" hook in \"Login Page Tests\"",
               "fullTitle": "Login Page Tests \"before all\" hook in \"Login Page Tests\"",
               "timedOut": false,
-              "duration": 662,
+              "duration": 586,
               "state": null,
               "speed": null,
               "pass": false,
@@ -45,8 +149,8 @@
               "context": null,
               "code": "console.log(\"[SETUP] Initializing WebDriver...\");\ntry {\n  driver = await createDriver();\n  loginPage = new LoginPage(driver);\n  console.log(\"[SETUP] WebDriver initialized successfully.\");\n} catch (err) {\n  console.error(\"[ERROR] Failed to initialize WebDriver:\", err);\n  throw err; // Stop tests if WebDriver fails\n}",
               "err": {},
-              "uuid": "a7e75c57-bc3f-4a63-97a1-9613a1a5ecf2",
-              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "uuid": "83e2142e-2438-4960-bf64-5308ad965b30",
+              "parentUUID": "742a7a91-4723-4cee-8f68-77d90215c2de",
               "isHook": true,
               "skipped": false
             }
@@ -56,7 +160,7 @@
               "title": "\"after all\" hook in \"Login Page Tests\"",
               "fullTitle": "Login Page Tests \"after all\" hook in \"Login Page Tests\"",
               "timedOut": false,
-              "duration": 43,
+              "duration": 40,
               "state": null,
               "speed": null,
               "pass": false,
@@ -65,8 +169,8 @@
               "context": null,
               "code": "if (driver) {\n  try {\n    console.log(\"[TEARDOWN] Closing browser...\");\n    await driver.quit();\n    console.log(\"[TEARDOWN] Browser closed successfully.\");\n  } catch (err) {\n    console.error(\"[WARN] Error closing browser:\", err);\n  }\n}",
               "err": {},
-              "uuid": "9d61a18a-53cc-457b-96bf-d0cd191d712a",
-              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "uuid": "0cc4c598-5876-468c-bfc5-d4913824ed27",
+              "parentUUID": "742a7a91-4723-4cee-8f68-77d90215c2de",
               "isHook": true,
               "skipped": false
             },
@@ -83,8 +187,8 @@
               "context": null,
               "code": "if (this.currentTest && this.currentTest.state === \"failed\" && driver) {\n  try {\n    const { saveScreenshot } = require(\"../utils/driver\");\n    const addContext = require(\"mochawesome/addContext\");\n    const safeName = this.currentTest.title.replace(/[^a-z0-9\\-]/gi, \"_\").toLowerCase();\n  // Save screenshot under mochawesome-report/screenshots so it's next to the report\n  const destUnderReport = `mochawesome-report/screenshots/${safeName}.png`;\n  const saved = await saveScreenshot(driver, destUnderReport);\n  // The mochawesome HTML file lives in mochawesome-report/, so the path it should load is relative\n  // to that file: `screenshots/<name>.png` (forward slashes). Do not prefix with 'mochawesome-report/'.\n  const reportRelativePath = `screenshots/${safeName}.png`;\n  addContext(this, reportRelativePath);\n  } catch (err) {\n    console.warn(\"[WARN] Could not capture screenshot:\", err && err.message ? err.message : err);\n  }\n}",
               "err": {},
-              "uuid": "19c6ba59-c34c-47b6-903c-5d79e139f555",
-              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "uuid": "c9d45978-732d-4bc2-beb2-6fa4247f15c1",
+              "parentUUID": "742a7a91-4723-4cee-8f68-77d90215c2de",
               "isHook": true,
               "skipped": false
             }
@@ -94,7 +198,7 @@
               "title": "should login successfully with valid credentials",
               "fullTitle": "Login Page Tests should login successfully with valid credentials",
               "timedOut": false,
-              "duration": 14017,
+              "duration": 14172,
               "state": "passed",
               "speed": "slow",
               "pass": true,
@@ -103,8 +207,8 @@
               "context": null,
               "code": "console.log(\"[TEST] Opening login page...\");\nawait loginPage.open();\nconsole.log(\"[TEST] Logging in with valid credentials...\");\nawait loginPage.login(testData.validUser.username, testData.validUser.password);\nconsole.log(\"[TEST] Waiting for page title to contain 'Swag Labs'...\");\nawait loginPage.waitForPageTitleContains(\"Swag Labs\");\nconst title = await driver.getTitle();\nconsole.log(`[ASSERT] Page title received: ${title}`);\nexpect(title).to.include(\"Swag Labs\");",
               "err": {},
-              "uuid": "2edc5cfd-46bb-4100-a4a4-0a90c6dc4635",
-              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "uuid": "fcfd6fdb-34d0-4a41-af71-be37d889972c",
+              "parentUUID": "742a7a91-4723-4cee-8f68-77d90215c2de",
               "isHook": false,
               "skipped": false
             },
@@ -112,7 +216,7 @@
               "title": "should display error message for invalid credentials",
               "fullTitle": "Login Page Tests should display error message for invalid credentials",
               "timedOut": false,
-              "duration": 13526,
+              "duration": 13392,
               "state": "passed",
               "speed": "slow",
               "pass": true,
@@ -121,21 +225,21 @@
               "context": null,
               "code": "console.log(\"[TEST] Opening login page...\");\nawait loginPage.open();\nconsole.log(\"[TEST] Logging in with invalid credentials...\");\nawait loginPage.login(testData.invalidUser.username, testData.invalidUser.password);\nconsole.log(\"[TEST] Fetching error message...\");\nconst error = await loginPage.getErrorMessage();\nconsole.log(`[ASSERT] Error message received: ${error}`);\nexpect(error).to.contain(\"Epic sadface\");",
               "err": {},
-              "uuid": "a3e5e4bb-70ac-4b9f-ac9a-c062e3225210",
-              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "uuid": "07ce0acb-e7c1-4fc5-8a81-9d2ac693ad34",
+              "parentUUID": "742a7a91-4723-4cee-8f68-77d90215c2de",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "2edc5cfd-46bb-4100-a4a4-0a90c6dc4635",
-            "a3e5e4bb-70ac-4b9f-ac9a-c062e3225210"
+            "fcfd6fdb-34d0-4a41-af71-be37d889972c",
+            "07ce0acb-e7c1-4fc5-8a81-9d2ac693ad34"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 27543,
+          "duration": 27564,
           "root": false,
           "rootEmpty": false,
           "_timeout": 60000
