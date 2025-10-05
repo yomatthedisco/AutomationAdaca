@@ -1,0 +1,175 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 2,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-10-05T18:06:17.701Z",
+    "end": "2025-10-05T18:06:45.955Z",
+    "duration": 28254,
+    "testsRegistered": 2,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "dca4552b-bd54-4711-95a2-a0687a119145",
+      "title": "",
+      "fullFile": "C:\\Users\\Memes\\Documents\\AutomationAdaca\\tests\\login.test.js",
+      "file": "\\tests\\login.test.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "494c5698-cb94-4e5f-a93a-344de123bd21",
+          "title": "Login Page Tests",
+          "fullFile": "C:\\Users\\Memes\\Documents\\AutomationAdaca\\tests\\login.test.js",
+          "file": "\\tests\\login.test.js",
+          "beforeHooks": [
+            {
+              "title": "\"before all\" hook in \"Login Page Tests\"",
+              "fullTitle": "Login Page Tests \"before all\" hook in \"Login Page Tests\"",
+              "timedOut": false,
+              "duration": 662,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "console.log(\"[SETUP] Initializing WebDriver...\");\ntry {\n  driver = await createDriver();\n  loginPage = new LoginPage(driver);\n  console.log(\"[SETUP] WebDriver initialized successfully.\");\n} catch (err) {\n  console.error(\"[ERROR] Failed to initialize WebDriver:\", err);\n  throw err; // Stop tests if WebDriver fails\n}",
+              "err": {},
+              "uuid": "a7e75c57-bc3f-4a63-97a1-9613a1a5ecf2",
+              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after all\" hook in \"Login Page Tests\"",
+              "fullTitle": "Login Page Tests \"after all\" hook in \"Login Page Tests\"",
+              "timedOut": false,
+              "duration": 43,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "if (driver) {\n  try {\n    console.log(\"[TEARDOWN] Closing browser...\");\n    await driver.quit();\n    console.log(\"[TEARDOWN] Browser closed successfully.\");\n  } catch (err) {\n    console.error(\"[WARN] Error closing browser:\", err);\n  }\n}",
+              "err": {},
+              "uuid": "9d61a18a-53cc-457b-96bf-d0cd191d712a",
+              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "isHook": true,
+              "skipped": false
+            },
+            {
+              "title": "\"after each\" hook in \"Login Page Tests\"",
+              "fullTitle": "Login Page Tests \"after each\" hook in \"Login Page Tests\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "if (this.currentTest && this.currentTest.state === \"failed\" && driver) {\n  try {\n    const { saveScreenshot } = require(\"../utils/driver\");\n    const addContext = require(\"mochawesome/addContext\");\n    const safeName = this.currentTest.title.replace(/[^a-z0-9\\-]/gi, \"_\").toLowerCase();\n  // Save screenshot under mochawesome-report/screenshots so it's next to the report\n  const destUnderReport = `mochawesome-report/screenshots/${safeName}.png`;\n  const saved = await saveScreenshot(driver, destUnderReport);\n  // The mochawesome HTML file lives in mochawesome-report/, so the path it should load is relative\n  // to that file: `screenshots/<name>.png` (forward slashes). Do not prefix with 'mochawesome-report/'.\n  const reportRelativePath = `screenshots/${safeName}.png`;\n  addContext(this, reportRelativePath);\n  } catch (err) {\n    console.warn(\"[WARN] Could not capture screenshot:\", err && err.message ? err.message : err);\n  }\n}",
+              "err": {},
+              "uuid": "19c6ba59-c34c-47b6-903c-5d79e139f555",
+              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [
+            {
+              "title": "should login successfully with valid credentials",
+              "fullTitle": "Login Page Tests should login successfully with valid credentials",
+              "timedOut": false,
+              "duration": 14017,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "console.log(\"[TEST] Opening login page...\");\nawait loginPage.open();\nconsole.log(\"[TEST] Logging in with valid credentials...\");\nawait loginPage.login(testData.validUser.username, testData.validUser.password);\nconsole.log(\"[TEST] Waiting for page title to contain 'Swag Labs'...\");\nawait loginPage.waitForPageTitleContains(\"Swag Labs\");\nconst title = await driver.getTitle();\nconsole.log(`[ASSERT] Page title received: ${title}`);\nexpect(title).to.include(\"Swag Labs\");",
+              "err": {},
+              "uuid": "2edc5cfd-46bb-4100-a4a4-0a90c6dc4635",
+              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should display error message for invalid credentials",
+              "fullTitle": "Login Page Tests should display error message for invalid credentials",
+              "timedOut": false,
+              "duration": 13526,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "console.log(\"[TEST] Opening login page...\");\nawait loginPage.open();\nconsole.log(\"[TEST] Logging in with invalid credentials...\");\nawait loginPage.login(testData.invalidUser.username, testData.invalidUser.password);\nconsole.log(\"[TEST] Fetching error message...\");\nconst error = await loginPage.getErrorMessage();\nconsole.log(`[ASSERT] Error message received: ${error}`);\nexpect(error).to.contain(\"Epic sadface\");",
+              "err": {},
+              "uuid": "a3e5e4bb-70ac-4b9f-ac9a-c062e3225210",
+              "parentUUID": "494c5698-cb94-4e5f-a93a-344de123bd21",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "2edc5cfd-46bb-4100-a4a4-0a90c6dc4635",
+            "a3e5e4bb-70ac-4b9f-ac9a-c062e3225210"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 27543,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 60000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 60000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "11.7.4"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": null,
+      "version": "6.3.0"
+    }
+  }
+}
