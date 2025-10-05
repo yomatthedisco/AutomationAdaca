@@ -21,6 +21,8 @@ describe("Login Page Tests", function () {
     }
   });
 
+  const { recordTest, printSummary } = require("../utils/testReporter");
+
   after(async function () {
     if (driver) {
       try {
@@ -31,6 +33,9 @@ describe("Login Page Tests", function () {
         console.error("[WARN] Error closing browser:", err);
       }
     }
+    // Print a short test summary
+    recordTest(this.test); // record the suite test if any
+    printSummary();
   });
 
   // Capture screenshot for every test (passed or failed) and attach to mochawesome
@@ -40,11 +45,15 @@ describe("Login Page Tests", function () {
         const { saveScreenshot } = require("../utils/driver");
         const addContext = require("mochawesome/addContext");
         const state = this.currentTest.state || "unknown";
-        const safeName = `${this.currentTest.title}__${state}`.replace(/[^a-z0-9\-]/gi, "_").toLowerCase();
+        const ts = new Date().toISOString().replace(/[:.]/g, "-");
+        const safeName = `${this.currentTest.title}__${state}__${ts}`.replace(/[^a-z0-9\-]/gi, "_").toLowerCase();
         const destUnderReport = `mochawesome-report/screenshots/${safeName}.png`;
         await saveScreenshot(driver, destUnderReport);
         const reportRelativePath = `screenshots/${safeName}.png`;
         addContext(this, reportRelativePath);
+        // record test outcome
+        const { recordTest } = require("../utils/testReporter");
+        recordTest(this.currentTest);
       } catch (err) {
         console.warn("[WARN] Could not capture screenshot:", err && err.message ? err.message : err);
       }

@@ -81,3 +81,22 @@ Evaluation criteria mapping (how this repo addresses each item):
 - Proper use of waits and synchronisation techniques: Explicit waits used and error message retrieval has retries/backoff.
 - Basic error handling: try/catch blocks in setup, teardown, and helpers; screenshot capture on test failure.
 - Clarity of README and documentation: This file includes run steps, troubleshooting, and notes.
+
+---
+
+## Test structure and design
+
+- `pages/` contains Page Objects (`login.page.js`, `inventory.page.js`) which encapsulate locators and actions.
+- `tests/` contains Mocha test suites (`login.test.js`, `inventory.test.js`). Each test uses the Page Objects and explicit waits.
+- `utils/driver.js` centralizes WebDriver creation, options and screenshot helper.
+- `test-data/user_credentials.json` contains credentials and a `testItem` entry used by inventory tests (data-driven).
+
+Data-driven testing
+
+- Inventory tests read `testData.testItem.name` from `test-data/user_credentials.json` so adding more items or iterating would be straightforward.
+
+Assumptions
+
+- Tests run against https://www.saucedemo.com/ (default `config.js` baseUrl).
+- Chrome is the target browser; chromedriver should match the installed Chrome version.
+- Native OS dialogs (outside the browser DOM) are out of scope for Selenium; best-effort disabling and DOM-based dismissal is implemented.
