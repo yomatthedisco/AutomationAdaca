@@ -100,3 +100,19 @@ Assumptions
 - Tests run against https://www.saucedemo.com/ (default `config.js` baseUrl).
 - Chrome is the target browser; chromedriver should match the installed Chrome version.
 - Native OS dialogs (outside the browser DOM) are out of scope for Selenium; best-effort disabling and DOM-based dismissal is implemented.
+
+Playwright
+
+- Playwright tests are available under `tests/playwright/` and use `@playwright/test`.
+- npm scripts added:
+	- `npm run test:pw` — run Playwright tests (headless by default)
+	- `npm run test:pw:headed` — run Playwright tests in headed mode for debugging
+
+To run Playwright tests:
+
+```cmd
+cd /d C:\path\to\repository
+npm install
+npx playwright install
+npm run test:pw
+```
