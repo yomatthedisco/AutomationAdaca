@@ -9,7 +9,9 @@
     "coverage": "nyc --reporter=lcov --reporter=text mocha tests/**/*.test.js --timeout 60000",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "clean": "rm -rf mochawesome-report coverage logs"
+    "clean": "rm -rf mochawesome-report coverage logs",
+    "test:pw": "npx playwright test",
+    "test:pw:headed": "npx playwright test --headed"
   },
   "dependencies": {
     "cross-env": "^7.0.3",
@@ -19,11 +21,16 @@
     "selenium-webdriver": "^4.36.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.1",
     "chai": "^6.2.0",
     "chromedriver": "^141.0.0",
     "eslint": "^9.37.0",
     "mocha": "^11.7.4",
     "nyc": "^17.1.0"
+  },
+  "@playwright/test": "^1.39.0",
+  "playwright": {
+    "version": "1.39.0"
   },
   "nyc": {
     "include": [
