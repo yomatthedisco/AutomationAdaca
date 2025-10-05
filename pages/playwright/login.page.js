@@ -1,4 +1,5 @@
 const config = require('../../config');
+const logger = require('../../utils/logger');
 
 class PlaywrightLoginPage {
   /**
@@ -16,12 +17,12 @@ class PlaywrightLoginPage {
   }
 
   async open() {
-    console.log('[PW] Opening login page...');
+    logger.info('[PW] Opening login page...');
     await this.page.goto(this.url);
   }
 
   async login(username, password) {
-    console.log(`[PW] Logging in as ${username}`);
+    logger.debug(`[PW] Logging in as ${username}`);
     await this.page.fill(this.selectors.username, username);
     await this.page.fill(this.selectors.password, password);
     await Promise.all([
@@ -33,7 +34,7 @@ class PlaywrightLoginPage {
   async getErrorMessage() {
     try {
       const el = await this.page.waitForSelector(this.selectors.errorMessage, { timeout: 3000 });
-      return await el.textContent();
+      return (await el.textContent()) || '';
     } catch (e) {
       return '';
     }

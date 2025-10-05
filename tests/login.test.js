@@ -2,6 +2,7 @@ const { expect } = require("chai");
 const { createDriver } = require("../utils/driver");
 const LoginPage = require("../pages/login.page");
 const testData = require("../test-data/user_credentials.json");
+const logger = require('../utils/logger');
 
 describe("Login Page Tests", function () {
   this.timeout(60000); // Increased timeout for slower startup or loading
@@ -10,13 +11,13 @@ describe("Login Page Tests", function () {
   let loginPage;
 
   before(async function () {
-    console.log("[SETUP] Initializing WebDriver...");
+    logger.info('Initializing WebDriver...');
     try {
       driver = await createDriver();
       loginPage = new LoginPage(driver);
-      console.log("[SETUP] WebDriver initialized successfully.");
+      logger.info('WebDriver initialized successfully.');
     } catch (err) {
-      console.error("[ERROR] Failed to initialize WebDriver:", err);
+      logger.error('Failed to initialize WebDriver:', err);
       throw err; // Stop tests if WebDriver fails
     }
   });
@@ -26,11 +27,11 @@ describe("Login Page Tests", function () {
   after(async function () {
     if (driver) {
       try {
-        console.log("[TEARDOWN] Closing browser...");
+        logger.info('Closing browser...');
         await driver.quit();
-        console.log("[TEARDOWN] Browser closed successfully.");
+        logger.info('Browser closed successfully.');
       } catch (err) {
-        console.error("[WARN] Error closing browser:", err);
+        logger.warn('Error closing browser:', err);
       }
     }
     // Print a short test summary
@@ -55,36 +56,37 @@ describe("Login Page Tests", function () {
         const { recordTest } = require("../utils/testReporter");
         recordTest(this.currentTest);
       } catch (err) {
-        console.warn("[WARN] Could not capture screenshot:", err && err.message ? err.message : err);
+        logger.warn('Could not capture screenshot:', err && err.message ? err.message : err);
       }
     }
   });
 
   it("should login successfully with valid credentials", async function () {
-    console.log("[TEST] Opening login page...");
-    await loginPage.open();
+  logger.info('Opening login page...');
+  await loginPage.open();
 
-    console.log("[TEST] Logging in with valid credentials...");
+    // Use the shared utility to create a traceable username (not actually used for auth here)
+    const { addTimestamp } = require("../utils/stringUtil");
+    const traceableUser = addTimestamp(testData.validUser.username);
+    logger.info(`Logging in with valid credentials (trace id: ${traceableUser})...`);
     await loginPage.login(testData.validUser.username, testData.validUser.password);
-
-    console.log("[TEST] Waiting for page title to contain 'Swag Labs'...");
+    logger.info("Waiting for page title to contain 'Swag Labs'...");
     await loginPage.waitForPageTitleContains("Swag Labs");
-
     const title = await driver.getTitle();
-    console.log(`[ASSERT] Page title received: ${title}`);
+    logger.debug(`Page title received: ${title}`);
     expect(title).to.include("Swag Labs");
   });
 
   it("should display error message for invalid credentials", async function () {
-    console.log("[TEST] Opening login page...");
+    logger.info('Opening login page...');
     await loginPage.open();
 
-    console.log("[TEST] Logging in with invalid credentials...");
+    logger.info('Logging in with invalid credentials...');
     await loginPage.login(testData.invalidUser.username, testData.invalidUser.password);
 
-    console.log("[TEST] Fetching error message...");
+    logger.info('Fetching error message...');
     const error = await loginPage.getErrorMessage();
-    console.log(`[ASSERT] Error message received: ${error}`);
+    logger.debug(`Error message received: ${error}`);
     expect(error).to.contain("Epic sadface");
   });
 });
